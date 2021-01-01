@@ -1,0 +1,69 @@
+# Use the create-group command to create the group. 
+
+=> aws iam create-group --group-name DevOps
+
+
+# Use the delete-group command to delete the group
+
+=>  aws iam delete-group --group-name DevOps
+
+
+# Use the create-user command to create the user.
+
+=> aws iam create-user --user-name testuser
+
+
+# Use the delete-user command to delete the user
+
+=> aws iam delete-user --user-name testuser
+
+
+# Use the detch-user-policy command to detach policy from user
+
+=>  aws iam detach-user-policy --policy-arn arn:aws:iam::aws:policy/IAMReadOnlyAccess --user-name testuser
+
+
+# Use the add-user-to-group command to add the user to the group. 
+
+=> aws iam add-user-to-group --user-name testuser --group-name DevOps
+
+
+# To verify that the MyIamGroup group contains the MyUser, use the get-group command. 
+
+=> aws iam get-group --group-name DevOps
+
+
+*******************************************************************************************
+
+#####  To attach an IAM managed policy to an IAM user
+
+# Determine the Amazon Resource Name (ARN) of the policy to attach
+
+==> export POLICYARN=$(aws iam list-policies --query 'Policies[?PolicyName==`AmazonEC2ReadOnlyAccess`].{ARN:Arn}' --output text)       ~
+    echo $POLICYARN
+
+#  To attach the policy, use the attach-user-policy command, and reference the environment variable that holds the policy ARN.
+
+==> aws iam attach-user-policy --user-name testuser --policy-arn $POLICYARN
+
+
+********************************************************************************************
+
+
+###### Setting up an initial password for IAM user
+
+===>   aws iam create-login-profile --user-name testuser --password password@123 --password-reset-required
+
+
+#  You can use the update-login-profile command to change the password for an IAM user. 
+
+==>   aws iam update-login-profile --user-name testuser --password changed@password
+
+
+********************************************************************************************
+
+######   Create an access key for an IAM user
+
+===>  aws iam create-access-key --user-name testuser
+
+# aws iam delete-access-key --user-name testuser --access-key-id AKIAIOSFODNN7EXAMPLE
